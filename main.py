@@ -19,11 +19,8 @@ def main():
     start_minigame = tk.Button(root, text="Iniciar Mini Juego", font=("Arial", 16), bg="green", fg="black", command=lambda: open_new_window_and_close_old(root, 'minigame'))
     start_minigame.pack(pady=20)
 
-    start_truth_tables_text = tk.Button(root, text="Tablas de Verdad formato textual", font=("Arial", 16), bg="orange", fg="black") 
+    start_truth_tables_text = tk.Button(root, text="Tablas de Verdad", font=("Arial", 16), bg="orange", fg="black", command=lambda: open_new_window_and_close_old(root, 'truth_values')) 
     start_truth_tables_text.pack(pady=20)
-
-    start_truth_tables_gui = tk.Button(root, text="Tablas de Verdad Valores de Verdad", font=("Arial", 16), bg="orange", fg="black")
-    start_truth_tables_gui.pack(pady=20)
 
     root.mainloop()
 
