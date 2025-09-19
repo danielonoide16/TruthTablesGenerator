@@ -4,10 +4,11 @@ from functools import partial
 
 class LogicGame:
     OPERATORS = {
-        "Y": lambda a, b: a and b,
-        "O": lambda a, b: a or b,
-        "Entonces": lambda a, b: (not a) or b,
-        "Si y solo si": lambda a, b: ((not a) or b) and ((not b) or a),
+        "∧": lambda a, b: a and b,
+        "v": lambda a, b: a or b,
+        "→": lambda a, b: (not a) or b,
+        "↔": lambda a, b: ((not a) or b) and ((not b) or a),
+        "⊕": lambda a, b: a != b
     }
 
     DEFAULT_TEXT = "Seleccionar"
@@ -37,7 +38,7 @@ class LogicGame:
         self.tries = 1
 
 
-        #go back botton
+        #go back button
         import main
         self.back_button = tk.Button(root, text="Volver", font=("Arial", 12), command= lambda: main.open_new_window_and_close_old(root, 'main'))
         self.back_button.place(x=10, y=10)

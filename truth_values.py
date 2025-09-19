@@ -89,7 +89,7 @@ def generar_resultados():
     valores.append(f"p ∧ q: {bool_to_vf(conjuncion(p_v, q_v))}")
     valores.append(f"p → q: {bool_to_vf(condicional(p_v, q_v))}")
     # También mostramos los demás requeridos
-    valores.append(f"p ∨ q: {bool_to_vf(disyuncion(p_v, q_v))}")
+    valores.append(f"p v q: {bool_to_vf(disyuncion(p_v, q_v))}")
     valores.append(f"¬p: {bool_to_vf(negacion(p_v))}")
     valores.append(f"¬q: {bool_to_vf(negacion(q_v))}")
     valores.append(f"p ↔ q: {bool_to_vf(bicondicional(p_v, q_v))}")
@@ -109,7 +109,7 @@ def main():
     root.geometry("1080x720")       # Define el tamaño (ancho x alto)
     root.resizable(False, False)   # Evita redimensionar
 
-    #go back botton
+    #go back button
     import main
     back_button = tk.Button(root, text="Volver", font=("Arial", 12), command= lambda: main.open_new_window_and_close_old(root, 'main'))
     back_button.pack(padx=10, pady=10, anchor="nw") #anchor nw makes it go to the top left corner
