@@ -4,14 +4,14 @@ from functools import partial
 
 class LogicGame:
     OPERATORS = {
-        "AND": lambda a, b: a and b,
-        "OR": lambda a, b: a or b,
-        "CONDITIONAL": lambda a, b: (not a) or b,
-        "BICONDITIONAL": lambda a, b: ((not a) or b) and ((not b) or a),
+        "Y": lambda a, b: a and b,
+        "O": lambda a, b: a or b,
+        "Entonces": lambda a, b: (not a) or b,
+        "Si y solo si": lambda a, b: ((not a) or b) and ((not b) or a),
     }
 
-
-    OP_OPTIONS = ["Select"] + list(OPERATORS.keys())
+    DEFAULT_TEXT = "Seleccionar"
+    OP_OPTIONS = [DEFAULT_TEXT] + list(OPERATORS.keys())
     VAR_OPTIONS = ["V", "F"]
 
     PROPOSITION_TOKENS = ["(", "p", "q", ")", "(", "r", "s", ")"]
@@ -33,7 +33,7 @@ class LogicGame:
         self.proposition_frame = tk.Frame(root, bg="lightblue")
         self.proposition_frame.pack(expand=True)
 
-        self.operator_vars = [tk.StringVar(value=self.OP_OPTIONS[0]) for _ in range(3)]
+        self.operator_vars = [tk.StringVar(value=self.OP_OPTIONS[0]) for _ in range(3)] #las stringvar son variables de tkinter especiales que actualizan automáticamente los widgets asociados
         self.tries = 1
 
 
@@ -97,7 +97,7 @@ class LogicGame:
     # LOGIC
     def start_guessing_phase(self, _):
         """jugador 2 empieza a adivinar las operaciones"""
-        if any(var.get() == "Select" for var in self.operator_vars):
+        if any(var.get() == self.DEFAULT_TEXT for var in self.operator_vars):
             self._popup("Atención", "Selecciona todas las operaciones")
             return
  
@@ -108,7 +108,7 @@ class LogicGame:
         self.var_vars = []
         self.boolean_values = [True] * 4
 
-        self._set_dropdown_str(self.operator_vars, "Select") # resetear dropdowns de operadores a "Select"
+        self._set_dropdown_str(self.operator_vars, self.DEFAULT_TEXT) # resetear dropdowns de operadores a la opción por defecto
 
         for col, idx in zip([1, 3, 7, 9], range(4)):
             old_label = self.proposition_frame.grid_slaves(row=0, column=col)[0] # obtener la etiqueta antigua
@@ -123,9 +123,9 @@ class LogicGame:
 
         for col in self.OP_POSITIONS:
             #move down the operator dropdowns 
-            old_widget = self.proposition_frame.grid_slaves(row=0, column=col)[0]
-            old_widget.grid_forget()
-            old_widget.grid(row=1, column=col, padx=5, pady=5)
+            op_widget = self.proposition_frame.grid_slaves(row=0, column=col)[0]
+            op_widget.grid_forget()
+            op_widget.grid(row=1, column=col, padx=5, pady=5)
 
             # add a question mark label in place of the operator dropdowns
             label = tk.Label(self.proposition_frame, text="?", font=("Arial", 16), bg="lightblue")
@@ -151,21 +151,26 @@ class LogicGame:
 
 
     def _on_var_change(self, idx, *_):
+        """callback cuando cambia un dropdown de variable"""
         self.boolean_values[idx] = (self.var_vars[idx].get() == "V")
         self._update_result()
 
+
     def _set_dropdown_str(self, dropdown_strs, str):
+        """establece el valor de múltiples StringVars (usadas en dropdowns) a str"""
         for str_var in dropdown_strs:
             str_var.set(str)
 
     def _update_result(self):
+        """actualiza el resultado mostrado basado en las selecciones actuales"""
         first = self.OPERATORS[self.selected_ops[0]](self.boolean_values[0], self.boolean_values[1])
         second = self.OPERATORS[self.selected_ops[2]](self.boolean_values[2], self.boolean_values[3])
         result = self.OPERATORS[self.selected_ops[1]](first, second)
         self.result_label.config(text="V" if result else "F")
 
     def check_guess(self, _):
-        if any(var.get() == "Select" for var in self.operator_vars):
+        """verifica si el jugador 2 adivinó correctamente las operaciones"""
+        if any(var.get() == self.DEFAULT_TEXT for var in self.operator_vars):
             self._popup("Atención", "Selecciona todas las operaciones")
             return
 
@@ -184,6 +189,7 @@ class LogicGame:
 
 
     def _popup(self, title, text):
+        """crea una ventana emergente modal con un mensaje"""
         popup = tk.Toplevel(self.root)
         popup.title(title)
         popup.geometry("300x150")

@@ -15,16 +15,16 @@ def conjuncion(a, b):       # a ∧ b
 def disyuncion(a, b):       # a ∨ b
     return a or b
 
-def negacion(a):            # ¬a
+def negacion(a):            # ~a
     return (not a)
 
-def condicional(a, b):      # a → b  (equivalente a (¬a) ∨ b)
+def condicional(a, b):      # a entonces b  (equivalente a (¬a) ∨ b)
     return (not a) or b
 
-def bicondicional(a, b):    # a ↔ b  (a y b tienen el mismo valor)
+def bicondicional(a, b):    # a si y solo si b  (a y b tienen el mismo valor)
     return a == b
 
-def xor(a, b):              # a ⊕ b  (verdadero si son distintos)
+def xor(a, b):              # a xor b  (verdadero si son distintos)
     return a != b
 
 # Construye frases para el formato textual
@@ -72,7 +72,7 @@ def generar_resultados():
 
     salida_textual.configure(state="normal")
     salida_textual.delete("1.0", "end")
-    salida_textual.insert("end", textual_p_and_q + "\n")
+    salida_textual.insert("end", textual_p_and_q + "\n") #parameters are: index and text to insert, the index is end because we want to append at the end
     salida_textual.insert("end", textual_p_imp_q + "\n")
     # Extras (comentados si se quiere dejar mínimo):
     salida_textual.insert("end", textual_p_or_q + "\n")
@@ -95,23 +95,28 @@ def generar_resultados():
     valores.append(f"p ↔ q: {bool_to_vf(bicondicional(p_v, q_v))}")
     valores.append(f"p ⊕ q: {bool_to_vf(xor(p_v, q_v))}")
 
-    salida_valores.configure(state="normal")
+    salida_valores.configure(state="normal") #normal means editable, so we can add the endline
     salida_valores.delete("1.0", "end")
-    salida_valores.insert("end", "\n".join(valores))
-    salida_valores.configure(state="disabled")
+    salida_valores.insert("end", "\n".join(valores)) #p ^ q \n p -> q \n ...
+    salida_valores.configure(state="disabled") #disabled means read-only, so the user cannot edit it
 
 def main():
     # Ventana principal (Tkinter básico, sin POO)
-    global entrada_p_texto, entrada_q_texto, entrada_p_valor, entrada_q_valor, salida_textual, salida_valores
+    global entrada_p_texto, entrada_q_texto, entrada_p_valor, entrada_q_valor, salida_textual, salida_valores #global para modificar estas variables dentro de la función generar_resultados
 
     root = tk.Tk()                 # Crea una nueva ventana
     root.title("Tabla de valores") # Le pone título
-    root.geometry("700x520")       # Define el tamaño (ancho x alto)
+    root.geometry("1080x720")       # Define el tamaño (ancho x alto)
     root.resizable(False, False)   # Evita redimensionar
+
+    #go back botton
+    import main
+    back_button = tk.Button(root, text="Volver", font=("Arial", 12), command= lambda: main.open_new_window_and_close_old(root, 'main'))
+    back_button.pack(padx=10, pady=10, anchor="nw") #anchor nw makes it go to the top left corner
 
     # --- Sección: Entradas ---
     marco_entradas = tk.LabelFrame(root, text="Entradas", padx=10, pady=10)
-    marco_entradas.pack(fill="x", padx=10, pady=10)
+    marco_entradas.pack(fill="x", padx=10, pady=10) #fill x makes it expand horizontally
 
     tk.Label(marco_entradas, text="p (texto):").grid(row=0, column=0, sticky="w")
     entrada_p_texto = tk.Entry(marco_entradas, width=40)
@@ -140,7 +145,7 @@ def main():
 
     # --- Sección: Formato Textual ---
     marco_textual = tk.LabelFrame(root, text="Formato textual (frases)", padx=10, pady=10)
-    marco_textual.pack(fill="both", expand=True, padx=10, pady=(0,10))
+    marco_textual.pack(fill="both", expand=True, padx=10, pady=(0,10)) #both and expand make it fill the available space
 
     salida_textual = tk.Text(marco_textual, height=7, state="disabled")
     salida_textual.pack(fill="both", expand=True)

@@ -1,3 +1,6 @@
+# Punto de entrada del proyecto. Muestra el menú principal y redirige al usuario
+# ya sea a la generación de tablas de verdad o al minijuego.
+
 import tkinter as tk
 
 def open_new_window_and_close_old(old_window, new_window):
